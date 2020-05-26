@@ -10,7 +10,10 @@ class Injector {
         private lateinit var appComponent: AppComponent
 
         fun initComponent(applicationContext: Context){
-            appComponent = DaggerAppComponent.create()
+            appComponent = DaggerAppComponent.builder()
+                .remoteModule(RemoteModule())
+                .storageModule(StorageModule(applicationContext))
+                .build()
         }
 
         fun getAppComponent() = appComponent

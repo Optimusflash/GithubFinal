@@ -15,21 +15,16 @@ import javax.inject.Singleton
  * Created by Dmitriy Chebotar on 26.05.2020.
  */
 @Singleton
-class DetailViewModel @Inject constructor(private val repository: MainRepository): ViewModel() {
+class DetailViewModel @Inject constructor(private val repository: MainRepository) : ViewModel() {
 
     private var disposeBag: CompositeDisposable? = CompositeDisposable()
     private val gitRepository = MutableLiveData<GitRepository>()
 
-    fun getGitRepository(user: String, repo: String): LiveData<GitRepository>{
-        val dispose = repository.loadGitRepositoryFromApi(user, repo)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                gitRepository.value = it
-            }, {
-
-            })
-        disposeBag?.add(dispose)
+    fun getGitRepository(user: String, repo: String): LiveData<GitRepository> {
+        repository.loadGitRepositoryFromDb(user, repo).observeForever {
+            it ?: return@observeForever
+            gitRepository.value = it
+        }
         return gitRepository
     }
 

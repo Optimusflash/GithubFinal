@@ -11,11 +11,9 @@ import javax.inject.Singleton
  * Created by Dmitriy Chebotar on 25.05.2020.
  */
 
-@Component(modules = ([RemoteModule::class, ViewModelModule::class]))
+@Component(modules = ([RemoteModule::class, ViewModelModule::class, StorageModule::class]))
 @Singleton
 interface AppComponent {
-    fun inject(mainRepository: MainRepository)
-
     fun inject(mainActivity: MainActivity)
     fun inject(repoListFragment: RepoListFragment)
     fun inject(repoDetailFragment: RepoDetailFragment)

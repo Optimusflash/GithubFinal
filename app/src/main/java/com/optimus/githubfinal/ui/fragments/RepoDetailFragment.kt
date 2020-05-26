@@ -71,10 +71,10 @@ class RepoDetailFragment : Fragment() {
             .load(repo.owner.avatarUrl)
             .into(detail_iv_avatar)
         detail_title.text = repo.name
-        detail_description.text = repo.description
+        detail_description.text = repo.description ?: " "
         detail_stars_count.text = repo.starsCount.toString()
         detail_forks_count.text = repo.forksCount.toString()
-        detail_prog_language.text = repo.progLanguage
+        detail_prog_language.text = repo.progLanguage ?: ":)"
         detail_created_date.text = repo.createdDate.formatDate()
         detail_updated_date.text = repo.updatedDate.formatDate()
     }

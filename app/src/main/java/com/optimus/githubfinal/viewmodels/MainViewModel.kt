@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.optimus.githubfinal.model.GitRepository
 import com.optimus.githubfinal.repository.MainRepository
 import com.optimus.githubfinal.ui.fragments.RepoListFragment
+import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -19,7 +20,7 @@ import javax.inject.Singleton
  * Created by Dmitriy Chebotar on 25.05.2020.
  */
 @Singleton
-class MainViewModel @Inject constructor(private val mainRepository: MainRepository): ViewModel() {
+class MainViewModel @Inject constructor(private val mainRepository: MainRepository) : ViewModel() {
 
 
     private val repositories = MutableLiveData<List<GitRepository>>()
@@ -27,16 +28,27 @@ class MainViewModel @Inject constructor(private val mainRepository: MainReposito
     private val isLoading = MutableLiveData<Boolean>()
     private var disposeBag: CompositeDisposable? = CompositeDisposable()
 
+    init {
+        mainRepository.loadGitRepositoriesFromDb().observeForever {
+            it?: return@observeForever
+            repositories.value = it
+        }
+    }
+
     fun getGitRepositories(repoName: String): LiveData<List<GitRepository>> {
         val disposable = mainRepository.loadGitRepositoriesFromApi(repoName)
+            .flatMapCompletable {
+                mainRepository.saveGitRepoToDb(it.gitRepositories)
+                return@flatMapCompletable Completable.complete()
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { isLoading.value = true }
-            .doAfterSuccess { isLoading.value = false }
+            .doOnComplete { isLoading.value = false }
             .subscribe({
-                repositories.value = it.gitRepositories
+                Log.e("M_MainViewModel", "complete...")
             }, {
-                Log.e("M_MainViewModel", "something was wrong... Bitch")
+                Log.e("M_MainViewModel", "something was wrong... ${it.localizedMessage}")
             })
         disposeBag?.add(disposable)
         return repositories
