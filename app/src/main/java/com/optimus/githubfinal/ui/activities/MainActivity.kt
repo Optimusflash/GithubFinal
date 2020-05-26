@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity(), RepoListFragment.OnRepoListItemClickLi
             progress_bar.visibility = View.VISIBLE
             list_repo_container.visibility = View.GONE
         } else {
+            hint_placeholder.visibility = View.GONE
             progress_bar.visibility = View.GONE
             list_repo_container.visibility = View.VISIBLE
         }

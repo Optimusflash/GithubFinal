@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.optimus.githubfinal.extensions.mutableLiveData
 import com.optimus.githubfinal.model.GitRepository
 import com.optimus.githubfinal.repository.MainRepository
 import com.optimus.githubfinal.ui.fragments.RepoListFragment
@@ -23,9 +24,9 @@ import javax.inject.Singleton
 class MainViewModel @Inject constructor(private val mainRepository: MainRepository) : ViewModel() {
 
 
-    private val repositories = MutableLiveData<List<GitRepository>>()
+    private var repositories=MutableLiveData<List<GitRepository>>()
     private val search = MutableLiveData<String>()
-    private val isLoading = MutableLiveData<Boolean>()
+    private val isLoading = mutableLiveData(false)
     private var disposeBag: CompositeDisposable? = CompositeDisposable()
 
     init {
@@ -35,23 +36,22 @@ class MainViewModel @Inject constructor(private val mainRepository: MainReposito
         }
     }
 
-    fun getGitRepositories(repoName: String): LiveData<List<GitRepository>> {
-        val disposable = mainRepository.loadGitRepositoriesFromApi(repoName)
-            .flatMapCompletable {
-                mainRepository.saveGitRepoToDb(it.gitRepositories)
-                return@flatMapCompletable Completable.complete()
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { isLoading.value = true }
-            .doOnComplete { isLoading.value = false }
-            .subscribe({
-                Log.e("M_MainViewModel", "complete...")
-            }, {
-                Log.e("M_MainViewModel", "something was wrong... ${it.localizedMessage}")
-            })
-        disposeBag?.add(disposable)
-        return repositories
+    fun getGitRepositories(repoName: String) {
+            val disposable = mainRepository.loadGitRepositoriesFromApi(repoName)
+                .flatMapCompletable {
+                    mainRepository.saveGitRepoToDb(it.gitRepositories)
+                    return@flatMapCompletable Completable.complete()
+                }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { isLoading.value = true }
+                .doOnComplete { isLoading.value = false }
+                .subscribe({
+                    Log.e("M_MainViewModel", "complete...")
+                }, {
+                    Log.e("M_MainViewModel", "something was wrong... ${it.localizedMessage}")
+                })
+            disposeBag?.add(disposable)
     }
 
     override fun onCleared() {
@@ -66,5 +66,5 @@ class MainViewModel @Inject constructor(private val mainRepository: MainReposito
 
     fun getSearchString() = search
     fun getLoadingState() = isLoading
-
+    fun getRepositories() = repositories
 }

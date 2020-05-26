@@ -24,6 +24,7 @@ import javax.inject.Inject
 class RepoListFragment : Fragment() {
 
     private lateinit var mainViewModel: MainViewModel
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var repoListAdapter: RepoAdapter
@@ -60,10 +61,10 @@ class RepoListFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        repoListAdapter = RepoAdapter{
+        repoListAdapter = RepoAdapter {
             val user = it.owner.login
             val repo = it.name
-            listener?.onRepoListItemClick(user,repo)
+            listener?.onRepoListItemClick(user, repo)
         }
         recycler_view_repo.layoutManager = LinearLayoutManager(activity)
         recycler_view_repo.adapter = repoListAdapter
@@ -71,16 +72,16 @@ class RepoListFragment : Fragment() {
 
     private fun initViewModel() {
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
-        mainViewModel.getSearchString().observe(this, Observer {searchString->
-
-            mainViewModel.getGitRepositories(searchString).observe(this, Observer {
+        mainViewModel.getSearchString().observe(this, Observer { searchString ->
+            mainViewModel.getGitRepositories(searchString)
+            mainViewModel.getRepositories().observe(this, Observer {
                 repoListAdapter.updateData(it)
             })
         })
 
     }
 
-    interface OnRepoListItemClickListener{
+    interface OnRepoListItemClickListener {
         fun onRepoListItemClick(user: String, repo: String)
     }
 }
