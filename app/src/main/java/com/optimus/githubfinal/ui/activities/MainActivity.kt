@@ -13,6 +13,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.optimus.githubfinal.R
 import com.optimus.githubfinal.di.Injector
+import com.optimus.githubfinal.extensions.hideKeyboard
+import com.optimus.githubfinal.extensions.isKeyboardOpen
 import com.optimus.githubfinal.ui.fragments.RepoDetailFragment
 import com.optimus.githubfinal.ui.fragments.RepoListFragment
 import com.optimus.githubfinal.viewmodels.MainViewModel
@@ -91,6 +93,9 @@ class MainActivity : AppCompatActivity(), RepoListFragment.OnRepoListItemClickLi
                     false
                 } else {
                     mainViewModel.handleSearchString(query)
+                    if(this@MainActivity.isKeyboardOpen()){
+                        this@MainActivity.hideKeyboard()
+                    }
                     true
                 }
             }

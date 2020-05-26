@@ -1,4 +1,4 @@
-package com.optimus.githubfinal.extentions
+package com.optimus.githubfinal.extensions
 
 import java.text.SimpleDateFormat
 import java.util.*

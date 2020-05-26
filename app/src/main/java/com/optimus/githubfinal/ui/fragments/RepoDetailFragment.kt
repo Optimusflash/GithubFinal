@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 
 import com.optimus.githubfinal.R
 import com.optimus.githubfinal.di.Injector
-import com.optimus.githubfinal.extentions.formatDate
+import com.optimus.githubfinal.extensions.formatDate
 import com.optimus.githubfinal.model.GitRepository
 import com.optimus.githubfinal.viewmodels.DetailViewModel
 import com.optimus.githubfinal.viewmodels.ViewModelFactory
