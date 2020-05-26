@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 
 import com.optimus.githubfinal.R
 import com.optimus.githubfinal.di.Injector
+import com.optimus.githubfinal.extentions.formatDate
 import com.optimus.githubfinal.model.GitRepository
 import com.optimus.githubfinal.viewmodels.DetailViewModel
 import com.optimus.githubfinal.viewmodels.ViewModelFactory
@@ -74,8 +75,8 @@ class RepoDetailFragment : Fragment() {
         detail_stars_count.text = repo.starsCount.toString()
         detail_forks_count.text = repo.forksCount.toString()
         detail_prog_language.text = repo.progLanguage
-        detail_created_date.text = repo.createdDate.toString()
-        detail_updated_date.text = repo.updatedDate.toString()
+        detail_created_date.text = repo.createdDate.formatDate()
+        detail_updated_date.text = repo.updatedDate.formatDate()
     }
 
 }
