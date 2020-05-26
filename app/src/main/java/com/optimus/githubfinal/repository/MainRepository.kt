@@ -10,13 +10,12 @@ import javax.inject.Inject
  * Created by Dmitriy Chebotar on 25.05.2020.
  */
 
-class MainRepository () {
-    @Inject
-    lateinit var api: GitApiService
+class MainRepository @Inject constructor(val api: GitApiService) {
 
     init {
         Injector.getAppComponent().inject(this)
     }
 
     fun loadGitRepositoriesFromApi(repoName: String)=api.getGitRepositories(repoName)
+    fun loadGitRepositoryFromApi(user: String, repo: String) = api.getGitRepository(user, repo)
 }

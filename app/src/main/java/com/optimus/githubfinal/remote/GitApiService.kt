@@ -16,5 +16,5 @@ interface GitApiService {
     fun getGitRepositories(@Query("q") repoName: String): Single<GitRepoResponse>
 
     @GET("repos/{user}/{repo}")
-    fun getGitRepository(@Path("user")user: String, @Path("repo")repo: String)
+    fun getGitRepository(@Path("user")user: String, @Path("repo")repo: String): Single<GitRepository>
 }

@@ -88,4 +88,7 @@ dependencies {
     //Stetho
     implementation 'com.facebook.stetho:stetho:1.5.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    //material
+    implementation 'com.google.android.material:material:1.1.0'
 }
