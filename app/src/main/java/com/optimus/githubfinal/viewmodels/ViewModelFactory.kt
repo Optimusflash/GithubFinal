@@ -6,7 +6,6 @@ import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 
-
 /**
  * Created by Dmitriy Chebotar on 26.05.2020.
  */

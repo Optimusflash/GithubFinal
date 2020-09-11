@@ -14,7 +14,7 @@ import javax.inject.Singleton
 /**
  * Created by Dmitriy Chebotar on 26.05.2020.
  */
-@Singleton
+
 class DetailViewModel @Inject constructor(private val repository: MainRepository) : ViewModel() {
 
     private var disposeBag: CompositeDisposable? = CompositeDisposable()

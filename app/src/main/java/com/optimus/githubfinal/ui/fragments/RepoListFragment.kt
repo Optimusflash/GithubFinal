@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.optimus.githubfinal.R
 import com.optimus.githubfinal.di.Injector
+import com.optimus.githubfinal.model.GitRepository
 import com.optimus.githubfinal.ui.activities.MainActivity
 import com.optimus.githubfinal.ui.adapters.RepoAdapter
 import com.optimus.githubfinal.viewmodels.MainViewModel
@@ -24,7 +25,6 @@ import javax.inject.Inject
 class RepoListFragment : Fragment() {
 
     private lateinit var mainViewModel: MainViewModel
-
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var repoListAdapter: RepoAdapter
@@ -37,11 +37,7 @@ class RepoListFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        try {
-            listener = activity as OnRepoListItemClickListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException(activity.toString() + " must implement OnRepoListItemClickListener")
-        }
+        listener = activity as? OnRepoListItemClickListener
     }
 
     override fun onCreateView(
@@ -62,9 +58,7 @@ class RepoListFragment : Fragment() {
 
     private fun initAdapter() {
         repoListAdapter = RepoAdapter {
-            val user = it.owner.login
-            val repo = it.name
-            listener?.onRepoListItemClick(user, repo)
+            listener?.onRepoListItemClick(it)
         }
         recycler_view_repo.layoutManager = LinearLayoutManager(activity)
         recycler_view_repo.adapter = repoListAdapter
@@ -72,17 +66,19 @@ class RepoListFragment : Fragment() {
 
     private fun initViewModel() {
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
-        mainViewModel.getSearchString().observe(this, Observer { searchString ->
-            mainViewModel.getGitRepositories(searchString)
-            mainViewModel.getRepositories().observe(this, Observer {
-                repoListAdapter.updateData(it)
-            })
+        mainViewModel.getSearchString().observe(viewLifecycleOwner, Observer {
+            Log.e("M_RepoListFragment", "invoke search $it")
+            mainViewModel.getGitRepositories(it)
         })
 
+        mainViewModel.getRepositories().observe(viewLifecycleOwner, Observer {
+            it ?: return@Observer
+            repoListAdapter.updateData(it)
+        })
     }
 
     interface OnRepoListItemClickListener {
-        fun onRepoListItemClick(user: String, repo: String)
+        fun onRepoListItemClick(gitRepository: GitRepository)
     }
 }
 

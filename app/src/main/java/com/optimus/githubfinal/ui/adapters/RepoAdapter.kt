@@ -44,7 +44,6 @@ class RepoAdapter(private val listener: (GitRepository)->Unit) : RecyclerView.Ad
         override val containerView: View?
             get() = itemView
 
-
         fun bind(repo: GitRepository) {
             Glide.with(itemView)
                 .load(repo.owner.avatarUrl)

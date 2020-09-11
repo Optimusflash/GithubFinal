@@ -29,16 +29,11 @@ class MainViewModel @Inject constructor(private val mainRepository: MainReposito
     private val isLoading = mutableLiveData(false)
     private var disposeBag: CompositeDisposable? = CompositeDisposable()
 
-    init {
-        mainRepository.loadGitRepositoriesFromDb().observeForever {
-            it?: return@observeForever
-            repositories.value = it
-        }
-    }
-
     fun getGitRepositories(repoName: String) {
+        Log.e("M_MainViewModel", "getGitRepositories")
             val disposable = mainRepository.loadGitRepositoriesFromApi(repoName)
                 .flatMapCompletable {
+                    Log.e("M_MainViewModel", "${it.gitRepositories}")
                     mainRepository.saveGitRepoToDb(it.gitRepositories)
                     return@flatMapCompletable Completable.complete()
                 }
@@ -48,8 +43,11 @@ class MainViewModel @Inject constructor(private val mainRepository: MainReposito
                 .doOnComplete { isLoading.value = false }
                 .subscribe({
                     Log.e("M_MainViewModel", "complete...")
+                    mainRepository.loadGitRepositoriesFromDb().observeForever {
+                        repositories.value = it
+                    }
                 }, {
-                    Log.e("M_MainViewModel", "something was wrong... ${it.localizedMessage}")
+                    Log.e("M_MainViewModel", "something was wrong... ")
                 })
             disposeBag?.add(disposable)
     }

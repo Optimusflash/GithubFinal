@@ -1,8 +1,10 @@
 package com.optimus.githubfinal.storage
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.optimus.githubfinal.model.GitRepository
+import io.reactivex.Completable
 
 /**
  * Created by Dmitriy Chebotar on 26.05.2020.
@@ -23,7 +25,7 @@ interface GitRepoDao {
     fun getOne(user: String, repo: String): LiveData<GitRepository>
 
     @Transaction
-    fun deleteAllAndInsert(list: List<GitRepository>) {
+    fun deleteAllAndInsert(list: List<GitRepository>){
         deleteAll()
         insertAll(list)
     }
