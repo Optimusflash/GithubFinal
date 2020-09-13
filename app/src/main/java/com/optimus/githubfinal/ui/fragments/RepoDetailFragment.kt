@@ -60,7 +60,7 @@ class RepoDetailFragment : Fragment() {
 
     private fun initViewModel(user: String, repo: String) {
         detailViewModel =
-            ViewModelProviders.of(this, viewModelFactory).get(DetailViewModel::class.java)
+            ViewModelProviders.of(requireActivity(), viewModelFactory).get(DetailViewModel::class.java)
         detailViewModel.getGitRepository(user, repo).observe(viewLifecycleOwner, Observer {
             updateViews(it)
         })

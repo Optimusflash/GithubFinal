@@ -20,7 +20,7 @@ import javax.inject.Singleton
 /**
  * Created by Dmitriy Chebotar on 25.05.2020.
  */
-@Singleton
+
 class MainViewModel @Inject constructor(private val mainRepository: MainRepository) : ViewModel() {
 
 

@@ -65,7 +65,7 @@ class RepoListFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
+        mainViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(MainViewModel::class.java)
         mainViewModel.getSearchString().observe(viewLifecycleOwner, Observer {
             Log.e("M_RepoListFragment", "invoke search $it")
             mainViewModel.getGitRepositories(it)
